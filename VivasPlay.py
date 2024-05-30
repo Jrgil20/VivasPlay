@@ -17,36 +17,67 @@ if not os.path.exists('correos.json'):
 with open('correos.json', 'r') as f:
     Correos = json.load(f)
 
-# Crear el marco para la tabla
-marco_tabla = tk.Frame(ventana)
-marco_tabla.pack()
+# Crear el marco para la tabla y los botones
+marco = tk.Frame(ventana)
+marco.pack()
+
+# Crear el botón para agregar el nuevo correo
+boton_agregar = tk.Button(marco, text="Añadir",)
+boton_agregar.grid(row=0, column=0, sticky='w')  # Colocar el botón en la esquina superior izquierda
+
+# Crear el botón para eliminar un correo
+boton_eliminar = tk.Button(marco, text="Eliminar",)
+boton_eliminar.grid(row=0, column=1, sticky='w')  # Colocar el botón a la derecha del botón de agregar
 
 # Crear la tabla
-tabla = ttk.Treeview(marco_tabla, columns=("Correo",))  # Usar ttk.Treeview
-tabla.heading("#0", text="")  # Ocultar la primera columna
-tabla.heading("Correo", text="Correo")
-tabla.pack()
+tabla = ttk.Treeview(marco, columns=("Enumeración", "Correo"))  # Usar ttk.Treeview
+tabla.column("#0", width=0, stretch=tk.NO)  # Ocultar la primera columna
+tabla.column("Enumeración", width=50, anchor=tk.CENTER)  # Ajustar el ancho de la columna de enumeración
+tabla.column("Correo", width=200, anchor=tk.W)  # Ajustar el ancho de la columna de correo
+tabla.heading("Enumeración", text="No.")  # Agregar encabezado a la columna de enumeración
+tabla.heading("Correo", text="Correo")  # Agregar encabezado a la columna de correo
+tabla.grid(row=1, column=0, columnspan=2, sticky='nsew')  # Colocar la tabla debajo de los botones
 
-# Insertar los Correos en la tabla
-for Correo in Correos:
-    tabla.insert("", tk.END, values=(Correo,))
+marco.grid_columnconfigure(0, weight=1)  # Hacer que la primera columna se expanda para llenar el espacio disponible
+marco.grid_rowconfigure(1, weight=1)  # Hacer que la segunda fila se expanda para llenar el espacio disponible
+# Insertar los Correos en la tabla con enumeración
+for i, Correo in enumerate(Correos, start=1):
+    tabla.insert("", tk.END, values=(i, Correo))
 
 # Crear el campo de entrada para el nuevo correo
 entrada_correo = tk.Entry(ventana)
 entrada_correo.pack()
 
-# Función para agregar el nuevo correo a la tabla y al archivo JSON
+# Actualizar la función agregar_correo para incluir la enumeración
 def agregar_correo():
     correo = entrada_correo.get()  # Obtener el correo del campo de entrada
-    tabla.insert("", tk.END, values=(correo,))  # Insertar el correo en la tabla
-    entrada_correo.delete(0, tk.END)  # Limpiar el campo de entrada
     Correos.append(correo)  # Agregar el correo a la lista
+    tabla.insert("", tk.END, values=(len(Correos), correo))  # Insertar el correo en la tabla con enumeración
+    entrada_correo.delete(0, tk.END)  # Limpiar el campo de entrada
     with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
         json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
 
 # Crear el botón para agregar el nuevo correo
 boton_agregar = tk.Button(ventana, text="Agregar correo", command=agregar_correo)
 boton_agregar.pack()
+
+# Actualizar la función eliminar_correo para recargar la tabla con enumeración
+def eliminar_correo():
+    correo = entrada_correo.get()  # Obtener el correo del campo de entrada
+    if correo in Correos:  # Si el correo está en la lista
+        Correos.remove(correo)  # Eliminar el correo de la lista
+        with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
+            json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
+        # Recargar la tabla con enumeración
+        for i in tabla.get_children():
+            tabla.delete(i)
+        for i, Correo in enumerate(Correos, start=1):
+            tabla.insert("", tk.END, values=(i, Correo))
+    entrada_correo.delete(0, tk.END)  # Limpiar el campo de entrada
+
+# Crear el botón para eliminar un correo
+boton_eliminar = tk.Button(ventana, text="Eliminar correo", command=eliminar_correo)
+boton_eliminar.pack()
 
 # Iniciar el bucle principal de la GUI
 ventana.mainloop()
