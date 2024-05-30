@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk  # Importar ttk
+from tkinter import filedialog
 import json  # Importar el módulo json
 import os  # Importar el módulo os
 
@@ -21,12 +22,39 @@ with open('correos.json', 'r') as f:
 marco = tk.Frame(ventana)
 marco.pack()
 
+def leer_archivo_externo():
+    ruta = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])  # Abre el cuadro de diálogo para seleccionar el archivo
+    with open(ruta, 'r') as f:
+        correos = f.read().splitlines()
+    return correos
+
+def añadir():
+    correos = leer_archivo_externo()  # Leer los correos del archivo seleccionado
+    Correos.extend(correos)  # Agregar los correos a la lista
+    for correo in correos:
+        tabla.insert("", tk.END, values=(len(Correos), correo))  # Insertar el correo en la tabla con enumeración
+    with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
+        json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
+
 # Crear el botón para agregar el nuevo correo
-boton_agregar = tk.Button(marco, text="Añadir",)
+boton_agregar = tk.Button(marco, text="Añadir", command=añadir)
 boton_agregar.grid(row=0, column=0, sticky='w')  # Colocar el botón en la esquina superior izquierda
 
+def eliminar():
+    correos_a_eliminar = leer_archivo_externo()  # Leer los correos del archivo seleccionado
+    for correo in correos_a_eliminar:
+        if correo in Correos:
+            Correos.remove(correo)  # Eliminar el correo de la lista
+    with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
+        json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
+    # Recargar la tabla
+    for i in tabla.get_children():
+        tabla.delete(i)
+    for i, correo in enumerate(Correos, start=1):
+        tabla.insert("", tk.END, values=(i, correo))  # Insertar el correo en la tabla con enumeración
+
 # Crear el botón para eliminar un correo
-boton_eliminar = tk.Button(marco, text="Eliminar",)
+boton_eliminar = tk.Button(marco, text="Eliminar", command=eliminar)
 boton_eliminar.grid(row=0, column=1, sticky='w')  # Colocar el botón a la derecha del botón de agregar
 
 # Crear la tabla
