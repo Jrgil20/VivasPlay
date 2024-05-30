@@ -38,6 +38,18 @@ tabla.heading("Enumeración", text="No.")  # Agregar encabezado a la columna de 
 tabla.heading("Correo", text="Correo")  # Agregar encabezado a la columna de correo
 tabla.grid(row=1, column=0, columnspan=2, sticky='nsew')  # Colocar la tabla debajo de los botones
 
+# Permitir la selección de múltiples filas
+tabla.configure(selectmode='extended')
+
+# Crear un menú contextual para la tabla
+menu_contextual = tk.Menu(ventana, tearoff=0)
+menu_contextual.add_command(label="Copiar", command=lambda: ventana.clipboard_append(tabla.item(tabla.selection(), 'values')[1]))
+
+def mostrar_menu_contextual(event):
+    menu_contextual.post(event.x_root, event.y_root)
+
+tabla.bind("<Button-3>", mostrar_menu_contextual)
+
 marco.grid_columnconfigure(0, weight=1)  # Hacer que la primera columna se expanda para llenar el espacio disponible
 marco.grid_rowconfigure(1, weight=1)  # Hacer que la segunda fila se expanda para llenar el espacio disponible
 # Insertar los Correos en la tabla con enumeración
