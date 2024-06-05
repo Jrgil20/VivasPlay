@@ -31,8 +31,12 @@ def leer_archivo_externo():
 def añadir():
     correos = leer_archivo_externo()  # Leer los correos del archivo seleccionado
     Correos.extend(correos)  # Agregar los correos a la lista
-    for correo in correos:
-        tabla.insert("", tk.END, values=(len(Correos), correo))  # Insertar el correo en la tabla con enumeración
+    # Borrar la tabla
+    for i in tabla.get_children():
+        tabla.delete(i)
+    # Insertar los correos en la tabla con la nueva numeración
+    for i, correo in enumerate(Correos, start=1):
+        tabla.insert("", tk.END, values=(i, correo))
     with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
         json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
 
