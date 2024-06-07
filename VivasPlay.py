@@ -29,33 +29,30 @@ def leer_archivo_externo():
     return correos
 
 def añadir():
-    correos = leer_archivo_externo()  # Leer los correos del archivo seleccionado
-    Correos.extend(correos)  # Agregar los correos a la lista
-    # Borrar la tabla
+    correos = [correo.strip() for correo in leer_archivo_externo()]  # Usar comprensión de lista con strip()
+    Correos.extend(correos)
     for i in tabla.get_children():
         tabla.delete(i)
-    # Insertar los correos en la tabla con la nueva numeración
     for i, correo in enumerate(Correos, start=1):
         tabla.insert("", tk.END, values=(i, correo))
-    with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
-        json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
+    with open('correos.json', 'w') as f:
+        json.dump(Correos, f)
 
 # Crear el botón para agregar el nuevo correo
 boton_agregar = tk.Button(marco, text="Añadir", command=añadir)
 boton_agregar.grid(row=0, column=0, sticky='w')  # Colocar el botón en la esquina superior izquierda
 
 def eliminar():
-    correos_a_eliminar = leer_archivo_externo()  # Leer los correos del archivo seleccionado
+    correos_a_eliminar = [correo.strip() for correo in leer_archivo_externo()]  # Usar comprensión de lista con strip()
     for correo in correos_a_eliminar:
         if correo in Correos:
-            Correos.remove(correo)  # Eliminar el correo de la lista
-    with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
-        json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
-    # Recargar la tabla
+            Correos.remove(correo)
+    with open('correos.json', 'w') as f:
+        json.dump(Correos, f)
     for i in tabla.get_children():
         tabla.delete(i)
     for i, correo in enumerate(Correos, start=1):
-        tabla.insert("", tk.END, values=(i, correo))  # Insertar el correo en la tabla con enumeración
+        tabla.insert("", tk.END, values=(i, correo))
 
 # Crear el botón para eliminar un correo
 boton_eliminar = tk.Button(marco, text="Eliminar", command=eliminar)
@@ -94,12 +91,13 @@ entrada_correo.pack()
 
 # Actualizar la función agregar_correo para incluir la enumeración
 def agregar_correo():
-    correo = entrada_correo.get()  # Obtener el correo del campo de entrada
-    Correos.append(correo)  # Agregar el correo a la lista
-    tabla.insert("", tk.END, values=(len(Correos), correo))  # Insertar el correo en la tabla con enumeración
-    entrada_correo.delete(0, tk.END)  # Limpiar el campo de entrada
-    with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
-        json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
+    correo = entrada_correo.get().strip()  # Usar strip() para eliminar espacios en blanco
+    if correo:  # Verificar que el correo no esté vacío después de quitar espacios
+        Correos.append(correo)
+        tabla.insert("", tk.END, values=(len(Correos), correo))
+        entrada_correo.delete(0, tk.END)
+        with open('correos.json', 'w') as f:
+            json.dump(Correos, f)
 
 # Crear el botón para agregar el nuevo correo
 boton_agregar = tk.Button(ventana, text="Agregar correo", command=agregar_correo)
@@ -107,17 +105,16 @@ boton_agregar.pack()
 
 # Actualizar la función eliminar_correo para recargar la tabla con enumeración
 def eliminar_correo():
-    correo = entrada_correo.get()  # Obtener el correo del campo de entrada
-    if correo in Correos:  # Si el correo está en la lista
-        Correos.remove(correo)  # Eliminar el correo de la lista
-        with open('correos.json', 'w') as f:  # Abrir el archivo JSON en modo de escritura
-            json.dump(Correos, f)  # Guardar la lista actualizada en el archivo JSON
-        # Recargar la tabla con enumeración
+    correo = entrada_correo.get().strip()  # Usar strip() para eliminar espacios en blanco
+    if correo in Correos:
+        Correos.remove(correo)
+        with open('correos.json', 'w') as f:
+            json.dump(Correos, f)
         for i in tabla.get_children():
             tabla.delete(i)
         for i, Correo in enumerate(Correos, start=1):
             tabla.insert("", tk.END, values=(i, Correo))
-    entrada_correo.delete(0, tk.END)  # Limpiar el campo de entrada
+    entrada_correo.delete(0, tk.END)
 
 # Crear el botón para eliminar un correo
 boton_eliminar = tk.Button(ventana, text="Eliminar correo", command=eliminar_correo)
