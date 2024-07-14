@@ -72,7 +72,7 @@ tabla.configure(selectmode='extended')
 
 # Crear un menú contextual para la tabla
 menu_contextual = tk.Menu(ventana, tearoff=0)
-menu_contextual.add_command(label="Copiar", command=lambda: ventana.clipboard_append(tabla.item(tabla.selection(), 'values')[1]))
+menu_contextual.add_command(label="Copiar valor", command=lambda: ventana.clipboard_clear() or ventana.clipboard_append('\n'.join([tabla.item(sel, 'values')[1] for sel in tabla.selection()])))
 
 def mostrar_menu_contextual(event):
     menu_contextual.post(event.x_root, event.y_root)
