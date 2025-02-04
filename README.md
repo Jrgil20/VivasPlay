@@ -61,6 +61,7 @@ Para construir la aplicación, siga estos pasos:
     - **cx_Freeze**: Puede instalar cx_Freeze usando `pip install cx_Freeze` y luego crear un archivo de configuración para construir el ejecutable.
     - **py2exe**: Puede instalar py2exe usando `pip install py2exe` y luego crear un archivo de configuración para construir el ejecutable.
 4. El ejecutable se generará en el directorio `dist` o en el directorio especificado en la configuración de la herramienta utilizada.
+5. coppie todo los assets a la carpeta dist
 
 ## Consejos
 - Puede usar el atajo de teclado Ctrl+C para copiar la dirección de correo electrónico de un correo electrónico seleccionado en la tabla.
