@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk  # Importar ttk
 from tkinter import filedialog
+import re
 import json  # Importar el módulo json
 import os  # Importar el módulo os
 
@@ -28,6 +29,15 @@ def leer_archivo_externo():
         correos = f.read().splitlines()
     return correos
 
+def Correos_regex(Correo):
+
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(pattern, Correo):
+        return False
+
+    return True
+
+
 def añadir():
     correos = [correo.strip() for correo in leer_archivo_externo()]  # Usar comprensión de lista con strip()
     Correos.extend(correos)
@@ -37,10 +47,6 @@ def añadir():
         tabla.insert("", tk.END, values=(i, correo))
     with open('correos.json', 'w') as f:
         json.dump(Correos, f)
-
-# Crear el botón para agregar el nuevo correo
-boton_agregar = tk.Button(marco, text="Añadir", command=añadir)
-boton_agregar.grid(row=0, column=0, sticky='w')  # Colocar el botón en la esquina superior izquierda
 
 def eliminar():
     correos_a_eliminar = [correo.strip() for correo in leer_archivo_externo()]  # Usar comprensión de lista con strip()
@@ -54,9 +60,35 @@ def eliminar():
     for i, correo in enumerate(Correos, start=1):
         tabla.insert("", tk.END, values=(i, correo))
 
+
+# Crear el botón para agregar el nuevo correo
+clip_icon = tk.PhotoImage(file="assets/image/clip_2891632.png")
+sub_menu = tk.Menu(ventana, tearoff=0)
+sub_menu.add_command(label="Añadir correos mediante archivo", command=añadir)
+sub_menu.add_command(label="Eliminar correos mediante archivo", command=eliminar)
+sub_menu.add_command(label="Opción 3", command=lambda: print("Opción 3 seleccionada"))
+
+def mostrar_submenu(event):
+    sub_menu.post(event.x_root, event.y_root)
+
+boton_adjuntar = tk.Button(marco, image=clip_icon)
+boton_adjuntar.image = clip_icon
+boton_adjuntar.bind("<Button-1>", mostrar_submenu)
+boton_adjuntar.grid(row=0, column=0, sticky='w')
+
+
 # Crear el botón para eliminar un correo
-boton_eliminar = tk.Button(marco, text="Eliminar", command=eliminar)
-boton_eliminar.grid(row=0, column=1, sticky='w')  # Colocar el botón a la derecha del botón de agregar
+ConfiMail_ico = tk.PhotoImage(file="assets/image/mail_1849441.png")
+boton_config = tk.Button(marco, image=ConfiMail_ico)
+# Crear el submenú de configuración
+config_menu = tk.Menu(ventana, tearoff=0)
+config_menu.add_command(label="Correos Regex", command=lambda: print("Correos Regex seleccionado"))
+
+def mostrar_config_menu(event):
+    config_menu.post(event.x_root, event.y_root)
+
+boton_config.bind("<Button-1>", mostrar_config_menu)
+boton_config.grid(row=0, column=1, sticky='w')  # Colocar el botón a la derecha del botón de agregar
 
 # Crear la tabla
 tabla = ttk.Treeview(marco, columns=("Enumeración", "Correo"))  # Usar ttk.Treeview
