@@ -40,7 +40,8 @@ def Correos_regex(Correo):
 
 def añadir():
     correos = [correo.strip() for correo in leer_archivo_externo()]  # Usar comprensión de lista con strip()
-    Correos.extend(correos)
+    correos_validos = [correo for correo in correos if Correos_regex(correo)]  # Filtrar correos válidos
+    Correos.extend(correos_validos)
     for i in tabla.get_children():
         tabla.delete(i)
     for i, correo in enumerate(Correos, start=1):
@@ -124,7 +125,7 @@ entrada_correo.pack()
 # Actualizar la función agregar_correo para incluir la enumeración
 def agregar_correo():
     correo = entrada_correo.get().strip()  # Usar strip() para eliminar espacios en blanco
-    if correo:  # Verificar que el correo no esté vacío después de quitar espacios
+    if correo and Correos_regex(correo):  # Verificar que el correo no esté vacío y sea válido
         Correos.append(correo)
         tabla.insert("", tk.END, values=(len(Correos), correo))
         entrada_correo.delete(0, tk.END)
