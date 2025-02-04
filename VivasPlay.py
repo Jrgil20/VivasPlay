@@ -48,6 +48,9 @@ def añadir():
         tabla.insert("", tk.END, values=(i, correo))
     with open('correos.json', 'w') as f:
         json.dump(Correos, f)
+    respuesta = tk.Toplevel(ventana)
+    respuesta.title("Resultado de la inserción")
+    tk.Label(respuesta, text=f"Se insertaron {len(correos_validos)} correos válidos.").pack(padx=20, pady=20)
 
 def eliminar():
     correos_a_eliminar = [correo.strip() for correo in leer_archivo_externo()]  # Usar comprensión de lista con strip()
@@ -60,14 +63,33 @@ def eliminar():
         tabla.delete(i)
     for i, correo in enumerate(Correos, start=1):
         tabla.insert("", tk.END, values=(i, correo))
+    respuesta = tk.Toplevel(ventana)
+    respuesta.title("Resultado de la eliminación")
+    tk.Label(respuesta, text=f"Se eliminaron {len(correos_a_eliminar)} correos.").pack(padx=20, pady=20)
 
+def Contar_Correos():
+    correos = [correo.strip() for correo in leer_archivo_externo() if correo.strip()]  # Leer y filtrar líneas no vacías
+    correos_validos = [correo for correo in correos if Correos_regex(correo)]  # Filtrar correos válidos
+    print(f"Se encontraron {len(correos_validos)} correos válidos.")  # Imprimir la cantidad de correos válidos
+    respuesta = tk.Toplevel(ventana)
+    respuesta.title("Resultado del conteo")
+    tk.Label(respuesta, text=f"Se encontraron {len(correos_validos)} correos válidos.").pack(padx=20, pady=20)
+    return len(correos_validos)
+
+def Exportar_Correos():
+    correos = [correo for correo in Correos if Correos_regex(correo)]  # Filtrar correos válidos
+    ruta = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])  # Abre el cuadro de diálogo para guardar el archivo
+    if ruta:
+        with open(ruta, 'w') as f:
+            f.write('\n'.join(correos))  # Escribir los correos en el archivo
 
 # Crear el botón para agregar el nuevo correo
 clip_icon = tk.PhotoImage(file="assets/image/clip_2891632.png")
 sub_menu = tk.Menu(ventana, tearoff=0)
 sub_menu.add_command(label="Añadir correos mediante archivo", command=añadir)
 sub_menu.add_command(label="Eliminar correos mediante archivo", command=eliminar)
-sub_menu.add_command(label="Opción 3", command=lambda: print("Opción 3 seleccionada"))
+sub_menu.add_command(label="Contar correos mediante archivo", command=Contar_Correos)
+sub_menu.add_command(label="Exportar correos", command=Exportar_Correos)
 
 def mostrar_submenu(event):
     sub_menu.post(event.x_root, event.y_root)
