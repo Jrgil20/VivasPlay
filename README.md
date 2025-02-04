@@ -43,6 +43,25 @@ Haga doble clic en el archivo ejecutable de la aplicación para iniciarla.
 2. Seleccione la opción "Copiar" en el menú contextual.
 3. La dirección de correo electrónico seleccionada se copiará al portapapeles.
 
+## Ejecutar en local
+Para ejecutar la aplicación en local, siga estos pasos:
+1. Abra una terminal o línea de comandos.
+2. Navegue al directorio donde se encuentra el archivo `VivasPlay.py`.
+3. Ejecute el siguiente comando:
+    ```sh
+    python .\VivasPlay.py
+    ```
+
+## build the application
+Para construir la aplicación, siga estos pasos:
+1. Abra una terminal o línea de comandos.
+2. Navegue al directorio donde se encuentra el archivo `VivasPlay.py`.
+3. Utilice una herramienta para convertir el script de Python en un ejecutable. Algunas opciones populares son:
+    - **PyInstaller**: Puede instalar PyInstaller usando `pip install pyinstaller` y luego ejecutar `pyinstaller --onefile --noconsole --name VivasPlay VivasPlay.py` para crear un ejecutable.
+    - **cx_Freeze**: Puede instalar cx_Freeze usando `pip install cx_Freeze` y luego crear un archivo de configuración para construir el ejecutable.
+    - **py2exe**: Puede instalar py2exe usando `pip install py2exe` y luego crear un archivo de configuración para construir el ejecutable.
+4. El ejecutable se generará en el directorio `dist` o en el directorio especificado en la configuración de la herramienta utilizada.
+
 ## Consejos
 - Puede usar el atajo de teclado Ctrl+C para copiar la dirección de correo electrónico de un correo electrónico seleccionado en la tabla.
 - Puede usar el atajo de teclado Ctrl+V para pegar la dirección de correo electrónico del portapapeles en el campo de entrada.
