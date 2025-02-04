@@ -20,7 +20,7 @@ with open('correos.json', 'r') as f:
 
 # Crear el marco para la tabla y los botones
 marco = tk.Frame(ventana)
-marco.pack()
+marco.pack(fill=tk.BOTH, expand=True)
 
 def leer_archivo_externo():
     ruta = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])  # Abre el cuadro de diálogo para seleccionar el archivo
