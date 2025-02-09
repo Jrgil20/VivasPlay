@@ -121,6 +121,7 @@ tabla.column("Correo", width=200, anchor=tk.W)  # Ajustar el ancho de la columna
 tabla.heading("Enumeración", text="No.")  # Agregar encabezado a la columna de enumeración
 tabla.heading("Correo", text="Correo")  # Agregar encabezado a la columna de correo
 tabla.grid(row=1, column=0, columnspan=2, sticky='nsew')  # Colocar la tabla debajo de los botones
+tabla.bind("<Control-c>", lambda event: ventana.clipboard_clear() or ventana.clipboard_append('\n'.join([tabla.item(sel, 'values')[1] for sel in tabla.selection()])))
 
 # Permitir la selección de múltiples filas
 tabla.configure(selectmode='extended')
