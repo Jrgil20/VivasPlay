@@ -199,7 +199,6 @@ def on_cell_double_click(event):
 
 tabla.bind("<Double-Button-1>", on_cell_double_click)
 
-tabla.bind("<Double-Button-1>", on_cell_double_click)
 
 def mostrar_menu_contextual(event):
     menu_contextual.post(event.x_root, event.y_root)
