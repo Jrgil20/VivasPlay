@@ -130,6 +130,77 @@ tabla.configure(selectmode='extended')
 menu_contextual = tk.Menu(ventana, tearoff=0)
 menu_contextual.add_command(label="Copiar valor", command=lambda: ventana.clipboard_clear() or ventana.clipboard_append('\n'.join([tabla.item(sel, 'values')[1] for sel in tabla.selection()])))
 
+
+deletemail_icon = tk.PhotoImage(file="assets/image/remove_13922476.png")
+copy_icon = tk.PhotoImage(file="assets/image/file_5632095.png")
+
+def on_cell_double_click(event):
+    region = tabla.identify("region", event.x, event.y)
+    if region == "cell":
+        row_id = tabla.identify_row(event.y)
+        col = tabla.identify_column(event.x)
+        if row_id and col:
+            item = tabla.item(row_id)
+            col_index = int(col.replace("#", "")) - 1
+            if col_index < len(item['values']):
+                original_text = item['values'][col_index]
+                top = tk.Toplevel(ventana)
+                top.title("Editar valor")
+                
+                entry = tk.Entry(top, width=50)
+                entry.pack(padx=10, pady=5)
+                entry.insert(0, original_text)
+                entry.select_range(0, tk.END)
+                entry.focus_set()
+                
+                def copiar():
+                    ventana.clipboard_clear()
+                    ventana.clipboard_append(entry.get())
+                
+                def eliminar():
+                    tabla.delete(row_id)
+                    if col_index == 1:  # Si se elimina en la columna de correo
+                        try:
+                            Correos.remove(original_text)
+                        except ValueError:
+                            pass
+                    top.destroy()
+                
+                def guardar_cambios():
+                    new_text = entry.get()
+                    if new_text != original_text:
+                        values = list(tabla.item(row_id, 'values'))
+                        values[col_index] = new_text
+                        tabla.item(row_id, values=tuple(values))
+                        if col_index == 1:
+                            try:
+                                index = Correos.index(original_text)
+                                Correos[index] = new_text
+                            except ValueError:
+                                pass
+                    top.destroy()
+                
+                btn_frame = tk.Frame(top)
+                btn_frame.pack(padx=10, pady=10)
+                
+                btn_copiar = tk.Button(btn_frame, image=copy_icon, command=copiar)
+                btn_copiar.image = copy_icon
+                btn_copiar.pack(side=tk.LEFT, padx=5)
+                
+                btn_eliminar = tk.Button(btn_frame, image=deletemail_icon, command=eliminar)
+                btn_eliminar.image = deletemail_icon
+                btn_eliminar.pack(side=tk.LEFT, padx=5)
+                
+                btn_guardar = tk.Button(btn_frame, text="Guardar Cambios", command=guardar_cambios)
+                btn_guardar.pack(side=tk.LEFT, padx=5)
+                
+                # Permitir cerrar la ventana sin actualizar cambios si se cierra manualmente
+                top.protocol("WM_DELETE_WINDOW", top.destroy)
+
+tabla.bind("<Double-Button-1>", on_cell_double_click)
+
+tabla.bind("<Double-Button-1>", on_cell_double_click)
+
 def mostrar_menu_contextual(event):
     menu_contextual.post(event.x_root, event.y_root)
 
