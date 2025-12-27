@@ -2,3 +2,4 @@ correos.json
 VivasPlay.spec
 build/
 dist/
+__pycache__/

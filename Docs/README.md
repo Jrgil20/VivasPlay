@@ -38,6 +38,10 @@ No se requiere instalación adicional de paquetes. La aplicación utiliza única
 python VivasPlay.py
 ```
 
+## Desarrollo y Build
+
+Para información detallada sobre cómo ejecutar la aplicación en modo desarrollo o construir el ejecutable, consulta la [Guía de Desarrollo y Build](DESARROLLO.md).
+
 ## Estructura del Proyecto
 
 ``` bash
