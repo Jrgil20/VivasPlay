@@ -44,19 +44,25 @@ Antes de comenzar, asegúrate de tener instalado:
    - O busca "PowerShell" o "Símbolo del sistema" en el menú de inicio
 
 2. **Navega al directorio del proyecto**
+
    ```powershell
    cd ruta\a\VivasPlay
    ```
+
    Ejemplo:
+
    ```powershell
    cd D:\VivasPlay
    ```
 
 3. **Ejecuta la aplicación**
+
    ```powershell
    python VivasPlay.py
    ```
+
    O si tienes múltiples versiones de Python:
+
    ```powershell
    python3 VivasPlay.py
    ```
@@ -68,15 +74,19 @@ Antes de comenzar, asegúrate de tener instalado:
    - macOS: `Cmd + Espacio`, escribe "Terminal"
 
 2. **Navega al directorio del proyecto**
+
    ```bash
    cd /ruta/a/VivasPlay
    ```
 
 3. **Ejecuta la aplicación**
+
    ```bash
    python3 VivasPlay.py
    ```
+
    O si `python` apunta a Python 3:
+
    ```bash
    python VivasPlay.py
    ```
@@ -107,6 +117,7 @@ pip install pyinstaller
 ```
 
 O si usas `pip3`:
+
 ```bash
 pip3 install pyinstaller
 ```
@@ -120,6 +131,7 @@ pyinstaller --onefile --noconsole --name VivasPlay VivasPlay.py
 ```
 
 **Parámetros explicados:**
+
 - `--onefile`: Crea un único archivo ejecutable (más fácil de distribuir)
 - `--noconsole`: Oculta la ventana de consola (solo muestra la interfaz gráfica)
 - `--name VivasPlay`: Nombre del ejecutable resultante
@@ -136,6 +148,7 @@ pyinstaller --onefile --noconsole --name VivasPlay --icon=assets/image/mail_1849
 #### Ubicación del Ejecutable
 
 Después del build, encontrarás:
+
 - **Ejecutable**: `dist/VivasPlay.exe` (Windows) o `dist/VivasPlay` (Linux/macOS)
 - **Archivos temporales**: `build/` (puedes eliminarlos después)
 
@@ -144,16 +157,19 @@ Después del build, encontrarás:
 **IMPORTANTE**: Después de crear el ejecutable, debes copiar la carpeta `assets` al directorio `dist`:
 
 **Windows:**
+
 ```powershell
 xcopy /E /I assets dist\assets
 ```
 
 **Linux/macOS:**
+
 ```bash
 cp -r assets dist/assets
 ```
 
 O manualmente:
+
 1. Abre la carpeta `dist`
 2. Crea una carpeta `assets` si no existe
 3. Copia todo el contenido de `assets/image/` a `dist/assets/image/`
@@ -233,6 +249,7 @@ exe = EXE(
 ```
 
 Luego ejecuta:
+
 ```bash
 pyinstaller VivasPlay.spec
 ```
@@ -329,7 +346,7 @@ El ejecutable estará en `dist/VivasPlay.exe`.
 
 Después de un build exitoso, la estructura debería verse así:
 
-```
+``` bash
 dist/
 ├── VivasPlay.exe          # Ejecutable (Windows)
 │   o VivasPlay            # Ejecutable (Linux/macOS)
@@ -352,6 +369,7 @@ dist/
 **Problema**: Python no está en el PATH del sistema.
 
 **Solución**:
+
 - Verifica que Python esté instalado: descarga desde [python.org](https://www.python.org/downloads/)
 - Durante la instalación, marca la opción "Add Python to PATH"
 - O usa `py` en Windows: `py VivasPlay.py`
@@ -362,12 +380,15 @@ dist/
 **Problema**: tkinter no está instalado (raro en instalaciones estándar de Python).
 
 **Solución**:
+
 - **Windows**: Reinstala Python y asegúrate de marcar "tcl/tk and IDLE"
 - **Linux**: Instala tkinter:
+
   ```bash
   sudo apt-get install python3-tk  # Debian/Ubuntu
   sudo yum install python3-tkinter  # RedHat/CentOS
   ```
+
 - **macOS**: tkinter viene incluido con Python
 
 ### Error al ejecutar el ejecutable: "Falta assets"
@@ -375,6 +396,7 @@ dist/
 **Problema**: Los archivos de assets no están en la ubicación correcta.
 
 **Solución**:
+
 1. Verifica que la carpeta `assets/` esté en el mismo directorio que el ejecutable
 2. Verifica que `assets/image/` contenga todos los archivos PNG
 3. Si usas PyInstaller con `--onefile`, asegúrate de incluir assets en el spec o copiarlos manualmente
@@ -384,10 +406,13 @@ dist/
 **Problema**: PyInstaller incluye muchas librerías por defecto.
 
 **Solución**:
+
 - Usa `--exclude-module` para excluir módulos no necesarios:
+
   ```bash
   pyinstaller --onefile --noconsole --exclude-module matplotlib --exclude-module numpy --name VivasPlay VivasPlay.py
   ```
+
 - Edita el archivo `.spec` para excluir más módulos
 
 ### El antivirus marca el ejecutable como sospechoso
@@ -395,6 +420,7 @@ dist/
 **Problema**: Los ejecutables creados con PyInstaller a veces son marcados como falsos positivos.
 
 **Solución**:
+
 - Agrega una excepción en tu antivirus para el ejecutable
 - Considera firmar el ejecutable con un certificado de código (requiere compra)
 - Informa a los usuarios que es un falso positivo común
@@ -404,14 +430,19 @@ dist/
 **Problema**: Hay un error en el código o falta una dependencia.
 
 **Solución**:
-1. Ejecuta el script directamente primero para ver el error:
-   ```bash
-   python VivasPlay.py
-   ```
+
+1. Ejecuta el script directamente primero para ver el error:have
+
+  ```bash
+  python VivasPlay.py
+  ```
+  
 2. Si funciona, prueba el build con consola visible:
-   ```bash
-   pyinstaller --onefile --name VivasPlay VivasPlay.py
-   ```
+
+  ```bash
+  pyinstaller --onefile --name VivasPlay VivasPlay.py
+  ```
+
    (sin `--noconsole` para ver los errores)
 3. Verifica que todas las dependencias estén incluidas en el build
 
@@ -420,6 +451,7 @@ dist/
 **Problema**: PyInstaller puede ser lento en la primera ejecución.
 
 **Solución**:
+
 - Es normal, especialmente con `--onefile`
 - Las ejecuciones posteriores son más rápidas
 - Considera usar `--onedir` en lugar de `--onefile` para builds más rápidos (pero genera una carpeta con múltiples archivos)
